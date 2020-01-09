@@ -102,7 +102,7 @@ predict.BLAST <- function(object, newdata, BLAST_args="", custom_format ="",
 
 
 
-pull.BLAST <- function(object, newdata, BLAST_args="",
+pullSequences.BLAST <- function(object, newdata, BLAST_args="",
                           ...) {
   
   db <- object$db
