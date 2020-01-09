@@ -11,4 +11,4 @@ export(
 
 S3method(print, BLAST)
 S3method(predict, BLAST)
-S3method(predict, BLAST)
+S3method(pullSequences, BLAST)
