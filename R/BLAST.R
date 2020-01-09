@@ -102,4 +102,42 @@ predict.BLAST <- function(object, newdata, BLAST_args="", custom_format ="",
 
 
 
+pull.BLAST <- function(object, newdata, BLAST_args="",
+                          ...) {
+  
+  db <- object$db
+  exe <- object$type
+  x <- newdata
+  
+  if(object$type!="blastdbcmd"){
+    return(warning("Must use 'blastdcmd'!"))
+  }
+  
+  ## get temp files and change working directory
+  wd <- tempdir()
+  dir <- getwd()
+  temp_file <- basename(tempfile(tmpdir = wd))
+  on.exit({
+    #cat(temp_file, "\n")
+    file.remove(Sys.glob(paste(temp_file, "*", sep="")))
+    setwd(dir)
+  })
+  setwd(wd)
+  
+  infile <- paste(temp_file, ".csv", sep="")
+  outfile <- paste(temp_file, "_BLAST_out.fasta", sep="")
+  
+  write.csv(x, infile, quote=FALSE)
+  
+  system(paste(.findExecutable(exe), "-db", db,
+               "-query", infile, "-out", outfile, '-outfmt "%f', BLAST_args))
+  
+  
+  ## read and parse rdp output
+  if(is(try(cl_tab <- readBStringSet(outfile,format = "fasta"), silent=TRUE), "try-error")) {
+    warning("BLAST did not return a match!")
+  }
 
+  
+  cl_tab
+}
