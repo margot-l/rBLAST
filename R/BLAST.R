@@ -94,7 +94,7 @@ predict.BLAST <- function(object, newdata, BLAST_args="", custom_format ="",
     cl_tab <- data.frame(matrix(ncol=length(c_names), nrow=0))
   }
 
-  if(ncol(cl_tab) != length(c_names)) stop("Problem with format (e.g., custom_format)!")
+  if(ncol(cl_tab) != length(c_names)) stop(paste("Problem with format (e.g., custom_format)!",ncol(cl_tab),"expected,",length(c_names),"found."))
   colnames(cl_tab) <- c_names
 
   cl_tab
