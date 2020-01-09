@@ -103,7 +103,7 @@ predict.BLAST <- function(object, newdata, BLAST_args="", custom_format ="",
 
 
 pullSequences.BLAST <- function(object, newdata, BLAST_args="",
-                          ...) {
+                                ...) {
   
   db <- object$db
   exe <- object$type
@@ -124,20 +124,21 @@ pullSequences.BLAST <- function(object, newdata, BLAST_args="",
   })
   setwd(wd)
   
-  infile <- paste(temp_file, ".csv", sep="")
-  outfile <- paste(temp_file, "_BLAST_out.fasta", sep="")
+  infile <- paste0(temp_file, ".csv")
+  outfile <- paste0(temp_file, "_BLAST_out.fasta")
   
-  write.csv(x, infile, quote=FALSE)
+  write.table(x, infile, quote=FALSE, row.names = FALSE,col.names = FALSE)
   
   system(paste(.findExecutable(exe), "-db", db,
-               "-query", infile, "-out", outfile, '-outfmt "%f', BLAST_args))
+               "-entry_batch", infile, "-out", outfile, '-outfmt "%f"', BLAST_args))
   
   
   ## read and parse rdp output
   if(is(try(cl_tab <- readBStringSet(outfile,format = "fasta"), silent=TRUE), "try-error")) {
     warning("BLAST did not return a match!")
+    cl_tab <- BStringSet()
   }
-
+  
   
   cl_tab
 }
